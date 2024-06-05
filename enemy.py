@@ -65,7 +65,6 @@ class Chaser(Enemy):
         self.color = (255, 153, 85)
 
     def update(self, player_pos):
-        super().update()
         if pygame.time.get_ticks() - self.create_time < 1000:
             return
 
@@ -138,8 +137,6 @@ class Shooter(Enemy):
         self.color = (255, 128, 128)
 
     def update(self, player_pos):
-        super().update()
-
         if pygame.time.get_ticks() - self.create_time < 1000:
             return
 
@@ -268,3 +265,21 @@ class Spreader(Enemy):
         )
         new_rect = new_image.get_rect(center=(self.x, self.y))
         screen.blit(new_image, new_rect.topleft)
+
+########################################
+############### PHASE 2 ################
+########################################
+
+class Divider(Spreader):
+    def __init__(self, x, y, size=5, level=3):
+        super().__init__(x, y)
+        self.image = pygame.transform.scale(
+            pygame.image.load("assets/divider.png"), (64*size/5, 64*size/5)
+        )
+        self.rect = self.image.get_rect(center=(x, y))
+        self.level = level
+        self.direction = pygame.Vector2(random.choice([-1, 0.5, 0.5, 1]), random.choice([-1, 0.5, 0.5, 1]))
+
+########################################
+############### PHASE 2 ################
+########################################

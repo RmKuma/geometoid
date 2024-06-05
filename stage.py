@@ -1,7 +1,7 @@
 import random
 import pygame
 
-from enemy import Chaser, Shooter, Spreader
+from enemy import Chaser, Shooter, Spreader, Divider
 from config import *
 
 
@@ -47,6 +47,27 @@ class Stage:
                     player.take_damage(1)
                     proj.destroyed = True
 
+        
+        ########################################
+        ############### PHASE 2 ################
+        ########################################
+        # check Divider enemy
+        destroyed_dividers = list(filter(lambda enemy: enemy.health <= 0 and type(enemy).__name__ == "Divider" and enemy.level > 1, self.enemies))
+
+        if len(destroyed_dividers) != 0:
+            waves = []
+            for _divider in destroyed_dividers:
+                _x, _y, _level = _divider.x, _divider.y, _divider.level - 1
+                waves.append(Divider(_x,_y, 2+_level, _level))
+                waves.append(Divider(_x,_y, 2+_level, _level))
+            for _new_divider in waves:
+                _new_divider.create_time = pygame.time.get_ticks() - 1000
+            self.enemies += waves
+
+        ########################################
+        ############### PHASE 2 ################
+        ########################################
+
         self.enemies = list(filter(lambda enemy: enemy.health > 0, self.enemies))
 
         if len(self.enemies) == 0:
@@ -64,6 +85,7 @@ class Stage:
             num_enemies = self.round // 2 + 1
             wave = []
             for _ in range(num_enemies):
+                ############### PHASSE 2 ################ 
                 enemy_type = random.choice([Chaser, Shooter, Spreader])
                 if random.random() < 0.5:
                     x = random.randint(64, SCREEN_WIDTH - 64)
